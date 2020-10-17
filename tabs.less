@@ -1,0 +1,168 @@
+.main-content {
+  display: flex;
+  margin-top: 50px;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+}
+
+.url-adder {
+  display: flex;
+  align-items: baseline;
+}
+
+.add-button {
+  height: 42px;
+  margin: 10px 0px 10px 0px;
+  border: none;
+
+}
+
+.add-button:focus {
+  outline: none;
+}
+
+.text-input {
+  font-size: 14px;
+  height: 20px;
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 5px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border: 1px solid lightgray;
+  border-right: 0px solid lightblue;
+  width: 90%;
+}
+
+
+.component-card {
+  padding: 15px;
+
+  box-sizing: border-box;
+
+  border-radius: 9px;
+  min-height: 300px;
+  height: 100%;
+  width: 450px;
+
+  @media only screen and (max-width: 560px) {
+    width: 300px;
+  }
+
+  background-color: #fcfbfb;
+  border: 1px solid lightgray;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: Avenir, Lato !important;
+  cursor: pointer;
+
+}
+
+.component-card.active {
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.component-card .content {
+  display: flex;
+}
+
+.component-card .content .details {
+  width: 100%;
+}
+
+.component-card .content .image {
+  align-self: center;
+}
+
+.tab-details-container {
+  overflow-y: auto;
+  margin-bottom: 5px;
+}
+
+.component-card .content .tab-details {
+  border-radius: 4px;
+  background-color: #e3e7ec;
+  display: flex;
+  padding: 8px;
+  margin-bottom: 5px;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.component-card .content .tab-details .information{
+  display: flex;
+  align-items: center;
+  max-width: 80%;
+}
+
+.component-card .content .tab-details .information img{
+ margin-right:10px;
+}
+
+.component-card .content .tab-details .close{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-self: flex-end;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    margin-top: 2px;
+    border-radius: 100%;
+}
+
+.component-card .content .tab-details .close:hover {
+  background: #ddd;
+}
+
+.component-card .content .tab-details p {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 0px;
+}
+
+.component-card .content .tab-details img {
+  margin-right: 5px;
+}
+
+.component-card .content .details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  cursor: text;
+}
+
+.component-card .content .details .header {
+  margin-bottom: 5px;
+  text-transform: capitalize;
+  font-weight: 700 !important;
+}
+
+.component-card .content .details .placeholder {
+  color: #615f5f;
+}
+
+.component-card .footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.component-card .footer .subdetail {
+  font-size: 12px;
+  color: #615f5f;
+  font-weight: 400;
+  cursor: default;
+}
+
+.component-card .footer .grouped-icons img {
+  border-radius: 8px;
+  background-color: #eee;
+  margin: 2px;
+}
