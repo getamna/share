@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Group of Tabs</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet/less" type="text/css" href="../css/styles.less" />
+  <link rel="stylesheet" type="text/css" href="../css/container.min.css" />
+  <link rel="stylesheet/less" type="text/css" href="./tabs.less" />
+  <script src="../js/less.min.js"></script>
+  <script type="text/javascript">
+    (window.heap = window.heap || []),
+      (heap.load = function (e, t) {
+        (window.heap.appid = e), (window.heap.config = t = t || {});
+        var r = document.createElement("script");
+        (r.type = "text/javascript"),
+          (r.async = !0),
+          (r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js");
+        var a = document.getElementsByTagName("script")[0];
+        a.parentNode.insertBefore(r, a);
+        for (
+          var n = function (e) {
+            return function () {
+              heap.push(
+                [e].concat(Array.prototype.slice.call(arguments, 0))
+              );
+            };
+          },
+          p = [
+            "addEventProperties",
+            "addUserProperties",
+            "clearEventProperties",
+            "identify",
+            "resetIdentity",
+            "removeEventProperty",
+            "setEventProperties",
+            "track",
+            "unsetEventProperty",
+          ],
+          o = 0;
+          o < p.length;
+          o++
+        )
+          heap[p[o]] = n(p[o]);
+      });
+    heap.load("3684493380");
+  </script>
+</head>
+
+<body style=" background: linear-gradient(180deg, #ffffff 27.74%, #d4ebeb 75%, #ffffff 75%),
+  #f3ecec;">
+  <div class="main-header">
+    <span class="logo" draggable="true" style="cursor: pointer" onclick="window.open('../','_self')"">
+        <img src=" ../favicon.png" height="36" width="30" draggable="false" />
+    </span>
+
+  </div>
+  <div class="ui container" style="height: 100vh;">
+    <div style="display: flex; flex-direction: column;height: 100%;align-items: center;">
+      <p style="text-align: center;">
+        an easy way to share <b>lots of links</b>
+      </p>
+
+      <button class="secondary" onclick="copyCode()" id="copy-button">
+        Copy URL
+      </button>
+
+      <div class="component" style="margin-top: 30px;">
+        <div class="component-card active pulse">
+          <div class="content">
+            <div class="details">
+              <h2 class="header placeholder" contenteditable="true" id="browser-title">
+                Untitled browser...
+              </h2>
+              <span style="display: flex;">
+                <p id="tab-count-text" style="margin:0px"></p>
+              </span>
+              <div class="url-adder" style=" margin-bottom: 12px;">
+                <input id="url-input-box" type="text" type="url" class="text-input" placeholder="add a new url"
+                  required />
+                <button onclick="addLink()" class="add-button">&#65291;</button>
+              </div>
+              <div class="tab-details-container">
+
+                <p id="zero-data" style="text-align: center;">add links to get started...</p>
+
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="text-align: center;margin-top: 40px;padding:10px"><a href="#">view on github</a></p>
+    </div>
+  </div>
+
+  <script>
+        let tabCount = 0;
+
+    loadFromUrl();
+    function loadFromUrl() {
+      console.log("looking for url params...")
+      let params = new URLSearchParams(document.location.search);
+      let element = params.get("code");
+      if (element) {
+        console.log("loading from url...");
+
+        parseCode(atob(element));
+      }
+
+    }
+    function getHostName(url) {
+      var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+      if (
+        match != null &&
+        match.length > 2 &&
+        typeof match[2] === "string" &&
+        match[2].length > 0
+      ) {
+        return match[2];
+      }
+      return undefined;
+    }
+
+    async function addLink() {
+      let urlBox = document.getElementById('url-input-box');
+      let url = getHostName(urlBox.value) || urlBox.value;
+      if (!url) {
+        alert("Blank");
+        return;
+      }
+      let tab = generateTab(url, urlBox.value);
+      let tabContainer = document.querySelector('.tab-details-container');
+      tabContainer.prepend(tab);
+      let transformUrl = !url.includes("://") ? `http://${url}` : url;
+      let pageTitleUrl = "http://textance.herokuapp.com/title/" + encodeURI(transformUrl);
+      try {
+        //Fetching Page Title with this API is problematic.
+        
+        let resp = undefined //await fetch(pageTitleUrl);
+        if (resp) {
+          let text = await resp.text();
+          let titleEl = tab.querySelector(".information p");
+          tab.setAttribute('data-title', text);
+          titleEl.innerHTML = text;
+        }
+      } catch (ex) {
+        console.log(ex);
+        console.log("broken..")
+      }
+      document.getElementById("zero-data").style.visibility = "hidden";
+      urlBox.value = "";
+
+    }
+
+    function copyCode() {
+      let code = generateCode();
+      /* Get the text field */
+      var copyText = document.createElement("input")
+      document.body.appendChild(copyText);
+      copyText.value = "https://getamna.com/share?code="+code;
+
+      /* Select the text field */
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+      /* Copy the text inside the text field */
+      document.execCommand("copy");
+      document.body.removeChild(copyText);
+      document.getElementById("copy-button").innerText = "Copied!"
+      setTimeout(() => {
+        document.getElementById("copy-button").innerText = "Copy URL"
+      }, 1500)
+    }
+
+    function generateCode(evt) {
+      //group=sdsdsdsd;url=[Page Title]abc.com/sdssada;[Page Title]sdsdsds.com/sdsad/sad
+      let browserTitle = document.getElementById("browser-title").innerText;
+      let shareLink = `group=${browserTitle};`;
+      let tabContainer = document.querySelector('.tab-details-container');
+      for (let child of tabContainer.children) {
+        let url = child.getAttribute('data-url');
+        if (!url) continue;
+        let title = child.getAttribute('data-title');
+        shareLink += `[${title}]${url};`;
+      }
+      console.log(shareLink)
+      let link = btoa(shareLink);
+      return link;
+
+
+    }
+
+    function parseCode(str) {
+  
+      let elements = str.split(";");
+      if (elements.length == 1) return;
+      console.log('parsing string...')
+      let groupName = elements[0].split("group=")[1];
+      
+      //update the browser title here
+      document.getElementById("browser-title").innerText = groupName;
+      elements.shift();
+
+      let tabContainer = document.querySelector('.tab-details-container');
+      for (let bigUrl of elements) {
+        if (!bigUrl.includes("]")) return;
+        let url = bigUrl.split("]")[1];
+        let title = bigUrl.match(/\[(.*)\]/)[1];
+        let host = getHostName(url);
+        tabContainer.prepend(generateTab(host, url, title));
+      }
+
+
+    }
+
+
+    function generateTab(hostUrl, fullUrl, title) {
+      let tab = document.createElement('div');
+      tab.classList.add("tab-details");
+      //tab.onclick = window.open(urlBox.value,"_blank")
+      tab.innerHTML =
+        ` <span class="information" style="display: flex;">
+          <img src="https://www.google.com/s2/favicons?domain=${hostUrl}" width="16" alt="" />
+          <p>${title || fullUrl}</p>
+        </span>
+        <div class="close">&times;</div>`
+      let transformUrl = !fullUrl.includes("://") ? `http://${fullUrl}` : fullUrl;
+      tab.setAttribute('data-url', transformUrl);
+      tab.setAttribute('data-title', (title || fullUrl));
+      tab.onclick = (evt) => { window.open(transformUrl, "_blank") };
+      let closeBtn = tab.querySelector(".close");
+      closeBtn.onclick = (evt) => { evt.stopPropagation(); onTabClose(evt, tab) };
+      tabCount = tabCount + 1;
+      document.getElementById("tab-count-text").innerText = `${tabCount} tabs total`;
+      return tab;
+    }
+
+    function onTabClose(evt, tab) {
+      let tabContainer = document.querySelector('.tab-details-container');
+      tabCount = tabCount - 1;
+      document.getElementById("tab-count-text").innerText = `${tabCount} tabs total`;
+      tab.remove();
+      if (tabCount == 0) {
+        document.getElementById("zero-data").style.visibility = "visible";
+      }
+
+    }
+
+
+  </script>
+
+</body>
+
+</html>
