@@ -10,7 +10,7 @@ All Data is stored in the URL as a Base64 encoded string of this format:
 group={Group Name};[website title]http://{url};[website title]{http://url}"
 ````
 
-Favicons are fetched via the [Google Favicon API](http://www.google.com/s2/favicons?domain=google.com
+Favicons are fetched via the [Google Favicon API](http://www.google.com/s2/favicons?domain=google.com)
 
 ### Future
 We plan to add URL shortening in the future with a helper service.
