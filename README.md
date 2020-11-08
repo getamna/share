@@ -13,4 +13,4 @@ group={Group Name};[website title]http://{url};[website title]{http://url}"
 Favicons are fetched via the [Google Favicon API](http://www.google.com/s2/favicons?domain=google.com)
 
 ### Future
-We plan to add URL shortening in the future with a helper service.
+We plan to add URL shortening in the future with a helper service. We may have to stand up our own server to help with this.
